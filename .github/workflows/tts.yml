@@ -1,0 +1,35 @@
+name: TTS 配音
+
+on:
+  workflow_dispatch:
+    inputs:
+      text:
+        description: 要合成的文本（中文女声）
+        required: false
+        default: 你好呀，我是莉莉丝，你的专属小魅魔。
+
+jobs:
+  tts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 安装 CPU 版 torch（省空间）
+        run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+      - name: 安装 ChatTTS
+        run: pip install ChatTTS==0.2.5
+
+      - name: 本地推理合成语音
+        run: python scripts/tts_speak.py --text "${{ inputs.text }}"
+
+      - name: 上传音频产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: tts-output
+          path: output/
