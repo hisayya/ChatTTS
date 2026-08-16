@@ -1,13 +1,15 @@
 import argparse, os, wave, struct, torch, ChatTTS
 
+
 def save_wav_std(data, path, sr=24000):
     """用标准库写 16-bit PCM wav（避免 torchaudio/torchcodec 依赖）"""
-    data = (data * 32767).astype('int16')
-    with wave.open(path, 'wb') as w:
+    data = (data * 32767).astype("int16")
+    with wave.open(path, "wb") as w:
         w.setnchannels(1)
         w.setsampwidth(2)
         w.setframerate(sr)
         w.writeframes(data.tobytes())
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -30,8 +32,11 @@ def main():
     save_wav_std(wav, "output/lilith.wav")
     print("saved output/lilith.wav")
 
-    os.system("ffmpeg -y -i output/lilith.wav -codec:a libmp3lame -qscale:a 4 output/lilith.mp3")
+    os.system(
+        "ffmpeg -y -i output/lilith.wav -codec:a libmp3lame -qscale:a 4 output/lilith.mp3"
+    )
     print("saved output/lilith.mp3")
+
 
 if __name__ == "__main__":
     main()
