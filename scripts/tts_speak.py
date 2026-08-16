@@ -10,9 +10,9 @@ def main():
     chat = ChatTTS.Chat()
     chat.load(compile=False)  # CPU 环境用 compile=False
 
-    torch.manual_seed(42)  # 固定音色（不传 seed 给 sample_random_speaker）
-    spk = chat.sample_random_speaker()
-    params = ChatTTS.Chat.InferCodeParams(spk_sem=spk, temperature=0.3)
+    torch.manual_seed(42)
+    spk = chat.sample_random_speaker()  # 返回 speaker str
+    params = ChatTTS.Chat.InferCodeParams(spk_emb=spk, temperature=0.3)
 
     wavs = chat.infer([args.text], params_infer_code=params)
     wav = wavs[0]
