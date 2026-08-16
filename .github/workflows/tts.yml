@@ -22,8 +22,8 @@ jobs:
       - name: 安装 CPU 版 torch + torchaudio（配套安装防CUDA依赖）
         run: pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
 
-      - name: 安装 ChatTTS
-        run: pip install ChatTTS==0.2.5
+      - name: 安装 ChatTTS 及依赖（requests 供权重下载）
+        run: pip install ChatTTS==0.2.5 requests
 
       - name: 本地推理合成语音
         env:
