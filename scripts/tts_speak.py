@@ -1,4 +1,4 @@
-import argparse, os, numpy as np, torch, torchaudio, ChatTTS
+import argparse, os, torch, torchaudio, ChatTTS
 
 def main():
     ap = argparse.ArgumentParser()
@@ -10,8 +10,8 @@ def main():
     chat = ChatTTS.Chat()
     chat.load(compile=False)  # CPU 环境用 compile=False
 
-    # 固定一个温柔女声 speaker 向量（用固定种子，保证音色稳定）
-    spk = chat.sample_random_speaker(seed=42)
+    torch.manual_seed(42)  # 固定音色（不传 seed 给 sample_random_speaker）
+    spk = chat.sample_random_speaker()
     params = ChatTTS.Chat.InferCodeParams(spk_sem=spk, temperature=0.3)
 
     wavs = chat.infer([args.text], params_infer_code=params)
@@ -22,7 +22,6 @@ def main():
         torchaudio.save("output/lilith.wav", torch.from_numpy(wav), 24000)
     print("saved output/lilith.wav len:", len(wav))
 
-    # 转 mp3
     os.system("ffmpeg -y -i output/lilith.wav -codec:a libmp3lame -qscale:a 4 output/lilith.mp3")
     print("saved output/lilith.mp3")
 
